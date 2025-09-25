@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # The input text to be processed
     input_text = """
     Lady Juliet gazed longingly at the stars, her heart aching for Romeo
-    """
+     """
 
     marked_text =add_language_markers(input_text)
     config = lx.factory.ModelConfig(
@@ -63,5 +63,15 @@ if __name__ == '__main__':
         model=model,
     )
 
+    # Save the results to a JSONL file
+    lx.io.save_annotated_documents([result], output_name="extraction_results.jsonl", output_dir=".")
+
+    # Generate the visualization from the file
+    html_content = lx.visualize("extraction_results.jsonl")
+    with open("visualization.html", "w") as f:
+        if hasattr(html_content, 'data'):
+            f.write(html_content.data)  # For Jupyter/Colab
+        else:
+            f.write(html_content)
     print("==========")
     print(result)
